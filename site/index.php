@@ -17,7 +17,7 @@ try {
     die("Lỗi tải dữ liệu trang chủ: " . $e->getMessage());
 }
 
-// 4. Nhúng Header giao diện dùng chung vào đầu trang
+
 include_once '../includes/header.php';
 ?>
 
@@ -154,6 +154,5 @@ include_once '../includes/header.php';
 </div>
 
 <?php 
-// 5. Nhúng Footer dùng chng kết thúc cấu trúc trang web
 include_once '../includes/footer.php'; 
 ?>

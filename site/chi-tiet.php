@@ -57,7 +57,7 @@ try {
     die("Lỗi hệ thống: " . $e->getMessage());
 }
 
-// Nhúng thanh Header dùng chung
+
 include_once '../includes/header.php';
 ?>
 

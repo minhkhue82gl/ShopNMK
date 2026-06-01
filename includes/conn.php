@@ -7,7 +7,7 @@ if (session_status() == PHP_SESSION_NONE) {
 $host = 'localhost';
 $dbname = 'shop_giay_nmk';
 $username = 'root';
-$password = ''; // Điền password MySQL của bạn nếu có
+$password = ''; // Điền password MySQL
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);

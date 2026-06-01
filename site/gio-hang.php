@@ -75,12 +75,12 @@ try {
                 ];
             }
         }
-        // Thêm xong điều hướng về trang giỏ hàng để tránh lặp lặp dữ liệu khi F5
+        //
         header('Location: gio-hang.php');
         exit;
     }
 
-    // ================= LUỒNG 2: CẬP NHẬT SỐ LƯỢNG GIỎ HÀNG =================
+    // 2: CẬP NHẬT SỐ LƯỢNG GIỎ HÀNG =================
     if ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['update_qty']) && is_array($_POST['update_qty'])) {
             foreach ($_POST['update_qty'] as $v_id => $qty) {
@@ -105,7 +105,7 @@ try {
         exit;
     }
 
-    // ================= LUỒNG 3: XÓA 1 SẢN PHẨM KHỎI GIỎ =================
+    // 3: XÓA 1 SẢN PHẨM KHỎI GIỎ =================
     if ($action === 'delete' && isset($_GET['variant_id'])) {
         $v_id = intval($_GET['variant_id']);
         if (isset($_SESSION['cart'][$v_id])) {
@@ -115,7 +115,7 @@ try {
         exit;
     }
 
-    // ================= LUỒNG 4: XÓA TOÀN BỘ GIỎ HÀNG =================
+    // 4: XÓA TOÀN BỘ GIỎ HÀNG =================
     if ($action === 'clear') {
         $_SESSION['cart'] = [];
         header('Location: gio-hang.php');
@@ -126,7 +126,7 @@ try {
     die("Lỗi xử lý giỏ hàng: " . $e->getMessage());
 }
 
-// Nhúng thanh điều hướng Header dùng chung
+
 include_once '../includes/header.php';
 ?>
 

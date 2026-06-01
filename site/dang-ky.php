@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['btn_dang_ky'])) {
 }
 }
 
-// Nhúng Header của trang web
+
 include_once '../includes/header.php';
 ?>
 

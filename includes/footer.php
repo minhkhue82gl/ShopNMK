@@ -44,7 +44,6 @@
     </div>
 </footer>
 
-<!-- Nhúng tập tin thư viện Javascript từ assets theo cấu trúc Tree.txt -->
 <script src="../assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

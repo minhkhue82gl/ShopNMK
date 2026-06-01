@@ -63,7 +63,6 @@ try {
     die("Lỗi truy vấn dữ liệu: " . $e->getMessage());
 }
 
-// Nhúng thanh điều hướng Header dùng chung
 include_once '../includes/header.php';
 ?>
 

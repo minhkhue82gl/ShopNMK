@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_btn'])) {
     }
 }
 
-// Nhúng thanh điều hướng Header dùng chung
+
 include_once '../includes/header.php';
 ?>
 
