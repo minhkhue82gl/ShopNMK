@@ -1,0 +1,124 @@
+/* assets/css/style.css */
+
+/* Định dạng chung toàn trang */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2d3436;
+}
+
+/* Hiệu ứng mượt mà cho các liên kết hover ở Footer và Navbar */
+.hover-link {
+    transition: all 0.3s ease;
+}
+.hover-link:hover {
+    color: #ffc107 !important;
+    padding-left: 4px; /* Hiệu ứng nhúc nhích nhẹ khi dịch chuyển qua các link chính sách */
+}
+
+/* Tùy chỉnh thẻ hiển thị sản phẩm (Product Card) */
+.product-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background-color: #ffffff;
+}
+
+/* Hiệu ứng nhấc bổng và đổ bóng khi rên chuột vào đôi giày */
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Khung chứa ảnh giày để đảm bảo các ảnh không bị méo, lệch kích thước */
+.product-img-container {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.product-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Giữ nguyên tỉ lệ ảnh giày */
+    transition: transform 0.5s ease;
+}
+
+/* Hiệu ứng phóng to nhẹ ảnh giày khi hover */
+.product-card:hover .product-img-container img {
+    transform: scale(1.08);
+}
+
+/* Nhãn Giảm Giá (Badge Sale) đè lên góc ảnh */
+.badge-sale {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #d63031;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    z-index: 2;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+/* Định dạng giá tiền sản phẩm */
+.price-current {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #d63031;
+}
+
+.price-old {
+    font-size: 0.9rem;
+    color: #b2bec3;
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+/* Tùy chỉnh các nút chọn Size / Màu sắc ở trang chi tiết */
+.btn-variant-select {
+    border: 2px solid #dfe6e9;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-variant-select:hover,
+.btn-variant-select.active {
+    border-color: #ffc107;
+    background-color: #fffdf0;
+    color: #2d3436;
+}
+/* Hiệu ứng rê chuột vào sản phẩm */
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+}
+/* Giới hạn độ dài text tiêu đề giày thành 2 dòng */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.btn-xs {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.75rem;
+    border-radius: 0.2rem;
+}
+.border-bottom-subtle {
+    border-bottom: 1px solid #f8f9fa !important;
+}
+.table-hover tbody tr:hover {
+    background-color: #fafbfc;
+}
