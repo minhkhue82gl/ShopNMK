@@ -49,7 +49,6 @@ $stmt = $conn->prepare($sql);
 $stmt->execute($params);
 $products = $stmt->fetchAll();
 
-// Nhúng Header giao diện vào đầu trang
 include_once '../includes/header.php';
 ?>
 
@@ -62,12 +61,10 @@ include_once '../includes/header.php';
     </nav>
 
     <div class="row">
-        <!-- Cột trái chiếm 3 phần: Khu vực Bộ lọc Sidebar -->
         <div class="col-md-3">
             <?php include_once '../includes/sidebar.php'; ?>
         </div>
 
-        <!-- Cột phải chiếm 9 phần: Danh sách sản phẩm thu về -->
         <div class="col-md-9">
             <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-2 border rounded">
                 <span class="small text-muted">Tìm thấy <strong><?= count($products) ?></strong> sản phẩm phù hợp.</span>
@@ -78,7 +75,6 @@ include_once '../includes/header.php';
                     <?php foreach($products as $prod): ?>
                         <div class="col-md-4 col-6">
                             <div class="card h-100 product-card shadow-sm border">
-                                <!-- Hiển thị nhãn giảm giá nếu có giá cũ -->
                                 <?php if($prod['old_price'] > 0): ?>
                                     <span class="badge bg-danger position-absolute m-2 top-0 start-0">Giảm giá</span>
                                 <?php endif; ?>
