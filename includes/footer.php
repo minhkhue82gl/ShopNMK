@@ -3,7 +3,7 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <h5 class="text-uppercase fw-bold text-white mb-3">SHOP GIÀY NMK</h5>
-                <p class="small text-secondary">NMK Shoes tự hào là hệ thống bán lẻ giày chạy bộ, giày sneaker và giày tây cao cấp chính hãng hàng đầu Việt Nam. Cam kết dịch vụ chất lượng, uy tín tuyệt đối.</p>
+                <p class="small text-secondary">NMK SHOP tự hào là hệ thống bán lẻ giày chạy bộ, giày sneaker và giày tây cao cấp chính hãng hàng đầu Việt Nam. Cam kết dịch vụ chất lượng, uy tín tuyệt đối.</p>
                 <p class="small m-0"><i class="fa-solid fa-location-dot me-2 text-warning"></i> 196 Hoàng Quốc Việt</p>
                 <p class="small m-0"><i class="fa-solid fa-envelope me-2 text-warning"></i> support@nmkshoes.com</p>
             </div>

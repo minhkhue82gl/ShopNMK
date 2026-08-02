@@ -1,20 +1,18 @@
 <?php
-// Nhúng cấu hình kết nối CSDL
 require_once '../includes/conn.php';
 
-// Khởi tạo câu lệnh SQL gốc
+/** @var PDO $conn */
+
 $sql = "SELECT DISTINCT p.* FROM products p 
         LEFT JOIN product_variants pv ON p.id = pv.product_id 
         WHERE p.status = 1";
 $params = [];
 
-// 1. Xử lý bộ lọc: Tìm kiếm theo từ khóa văn bản
 if (!empty($_GET['search'])) {
     $sql .= " AND p.product_name LIKE ?";
-    $params[] = "%" . $_GET['search'] . "%";
+    $params[] = "%" . trim($_GET['search']) . "%";
 }
 
-// 2. Xử lý bộ lọc: Loại danh mục (Mảng checkbox)
 if (!empty($_GET['category'])) {
     $cate_ids = (array)$_GET['category'];
     $in_query = implode(',', array_fill(0, count($cate_ids), '?'));
@@ -22,7 +20,6 @@ if (!empty($_GET['category'])) {
     $params = array_merge($params, $cate_ids);
 }
 
-// 3. Xử lý bộ lọc: Thương hiệu (Mảng checkbox)
 if (!empty($_GET['brand'])) {
     $brand_ids = (array)$_GET['brand'];
     $in_query = implode(',', array_fill(0, count($brand_ids), '?'));
@@ -30,76 +27,112 @@ if (!empty($_GET['brand'])) {
     $params = array_merge($params, $brand_ids);
 }
 
-// 4. Xử lý bộ lọc: Khoảng giá bán (Radio button)
 if (!empty($_GET['price_range'])) {
-    list($min_price, $max_price) = explode('-', $_GET['price_range']);
-    $sql .= " AND p.price BETWEEN ? AND ?";
-    $params[] = $min_price;
-    $params[] = $max_price;
+    list($min_r, $max_r) = explode('-', $_GET['price_range']);
+    $sql .= " AND p.price >= ? AND p.price <= ?";
+    $params[] = floatval($min_r);
+    $params[] = floatval($max_r);
 }
 
-// 5. Xử lý bộ lọc: Kích thước Size giày (Radio button)
+if (isset($_GET['min_price']) && $_GET['min_price'] !== '') {
+    $sql .= " AND p.price >= ?";
+    $params[] = floatval($_GET['min_price']);
+}
+if (isset($_GET['max_price']) && $_GET['max_price'] !== '') {
+    $sql .= " AND p.price <= ?";
+    $params[] = floatval($_GET['max_price']);
+}
+
 if (!empty($_GET['size'])) {
     $sql .= " AND pv.size = ?";
     $params[] = $_GET['size'];
 }
 
-// Thực thi câu truy vấn sau khi tổng hợp bộ lọc dữ liệu hoàn tất
+if (!empty($_GET['color'])) {
+    $sql .= " AND pv.color = ?";
+    $params[] = $_GET['color'];
+}
+
+$sql .= " ORDER BY p.id DESC";
+
 $stmt = $conn->prepare($sql);
 $stmt->execute($params);
-$products = $stmt->fetchAll();
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 include_once '../includes/header.php';
+
+function getProductImageUrl($prod) {
+    $img_filename = !empty($prod['image_url']) ? $prod['image_url'] : (!empty($prod['image']) ? $prod['image'] : '');
+
+    if (!empty($img_filename)) {
+        if (filter_var($img_filename, FILTER_VALIDATE_URL)) {
+            return $img_filename;
+        }
+        $relative_path = "assets/uploads/products/" . $img_filename;
+        if (file_exists("../" . $relative_path)) return "../" . $relative_path;
+        if (file_exists($relative_path)) return $relative_path;
+        if (file_exists("../" . $img_filename)) return "../" . $img_filename;
+        if (file_exists($img_filename)) return $img_filename;
+    }
+    return "https://placehold.co/300x300?text=NMK+Shop";
+}
 ?>
 
 <div class="container my-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none">Trang chủ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Danh mục sản phẩm</li>
+            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">Cửa hàng & Tìm kiếm</li>
         </ol>
     </nav>
 
-    <div class="row">
-        <div class="col-md-3">
-            <?php include_once '../includes/sidebar.php'; ?>
+    <div class="row g-4">
+        <div class="col-lg-3 col-md-4">
+            <?php 
+                if (file_exists('../includes/sidebar.php')) {
+                    include_once '../includes/sidebar.php';
+                } else if (file_exists('../includes/navbar.php')) {
+                    include_once '../includes/navbar.php';
+                }
+            ?>
         </div>
 
-        <div class="col-md-9">
-            <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-2 border rounded">
-                <span class="small text-muted">Tìm thấy <strong><?= count($products) ?></strong> sản phẩm phù hợp.</span>
+        <div class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3 bg-white p-3 border rounded shadow-sm">
+                <span class="small text-secondary">
+                    <?php if(!empty($_GET['search'])): ?>
+                        Kết quả cho từ khóa: "<strong class="text-dark"><?= htmlspecialchars($_GET['search']) ?></strong>" — 
+                    <?php endif; ?>
+                    Tìm thấy <strong class="text-danger fs-6"><?= count($products) ?></strong> sản phẩm phù hợp.
+                </span>
             </div>
 
             <div class="row g-3">
                 <?php if(count($products) > 0): ?>
                     <?php foreach($products as $prod): ?>
-                        <div class="col-md-4 col-6">
-                            <div class="card h-100 product-card shadow-sm border">
-                                <?php if($prod['old_price'] > 0): ?>
-                                    <span class="badge bg-danger position-absolute m-2 top-0 start-0">Giảm giá</span>
-                                <?php endif; ?>
-                                
-                                <img src="../assets/images/af1_white.jpg" class="card-img-top p-2" alt="<?= htmlspecialchars($prod['product_name']) ?>" style="object-fit: contain; max-height: 200px;">
-                                
-                                <div class="card-body d-flex flex-column justify-content-between">
-                                    <h6 class="card-title fw-bold text-dark text-truncate-2" style="font-size: 14px; height: 40px; overflow: hidden;">
+                        <?php $img_url = getProductImageUrl($prod); ?>
+                        <div class="col-lg-4 col-md-6 col-6">
+                            <div class="card h-100 product-card shadow-sm border position-relative bg-white">
+                                <div class="p-3 text-center">
+                                    <img src="<?= htmlspecialchars($img_url) ?>" class="img-fluid" alt="<?= htmlspecialchars($prod['product_name']) ?>" style="max-height: 180px; object-fit: contain;">
+                                </div>
+                                <div class="card-body d-flex flex-column justify-content-between pt-0">
+                                    <h6 class="card-title fw-bold text-dark text-truncate-2 mb-2" style="font-size: 14px; height: 40px; overflow: hidden;">
                                         <?= htmlspecialchars($prod['product_name']) ?>
                                     </h6>
                                     <div class="price-group my-2">
                                         <span class="text-danger fw-bold fs-5"><?= number_format($prod['price'], 0, ',', '.') ?> đ</span>
-                                        <?php if($prod['old_price'] > 0): ?>
-                                            <br><small class="text-muted text-decoration-line-through"><?= number_format($prod['old_price'], 0, ',', '.') ?> đ</small>
-                                        <?php endif; ?>
                                     </div>
-                                    <a href="chi-tiet.php?id=<?= $prod['id'] ?>" class="btn btn-outline-dark btn-sm w-100 mt-2">Xem chi tiết</a>
+                                    <a href="chi-tiet.php?id=<?= $prod['id'] ?>" class="btn btn-dark btn-sm w-100 mt-2 fw-bold text-uppercase py-2" style="font-size: 12px; background-color: #111;">Xem chi tiết</a>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div class="col-12 text-center my-5">
-                        <i class="fa-solid fa-folder-open text-muted fs-1 mb-3"></i>
-                        <p class="text-muted">Không tìm thấy đôi giày nào đáp ứng tiêu chí lọc của bạn.</p>
+                    <div class="col-12 text-center my-5 py-5 bg-white border rounded shadow-sm">
+                        <i class="fa-solid fa-folder-open text-muted display-4 mb-3"></i>
+                        <h5 class="fw-bold text-secondary">Không tìm thấy sản phẩm phù hợp</h5>
+                        <a href="cua-hang.php" class="btn btn-dark btn-sm fw-bold px-4 py-2 mt-2" style="background-color: #111;">XÓA BỘ LỌC</a>
                     </div>
                 <?php endif; ?>
             </div>
@@ -107,6 +140,4 @@ include_once '../includes/header.php';
     </div>
 </div>
 
-<?php 
-include_once '../includes/footer.php'; 
-?>
+<?php include_once '../includes/footer.php'; ?>

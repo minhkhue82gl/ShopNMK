@@ -1,0 +1,5 @@
+<?php
+
+require_once __DIR__ . '/config.php';
+
+redirect(BASE_URL . 'site/index.php');

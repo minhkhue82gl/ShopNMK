@@ -4,9 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Đếm số lượng sản phẩm độc lập trong giỏ hàng hiện tại
 $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
-// Kiểm tra an toàn trạng thái đăng nhập
 $is_logged_in = isset($_SESSION['user']) && is_array($_SESSION['user']);
 $user_data = $is_logged_in ? $_SESSION['user'] : null;
 ?>
@@ -38,12 +36,38 @@ $user_data = $is_logged_in ? $_SESSION['user'] : null;
         <span><i class="fa-solid fa-phone me-1"></i> Hotline: 0984981098</span>
         <div>
             <?php if($is_logged_in): ?>
-                <span class="me-3">Xin chào, <strong><?= htmlspecialchars($user_data['fullname']) ?></strong></span>
-                <?php if(isset($user_data['role']) && $user_data['role'] !== 'customer'): ?>
-                    <a href="../admin/index.php" class="text-dark text-decoration-none me-3"><i class="fa-solid fa-user-gear"></i> Trang Quản Trị</a>
-                <?php endif; ?>
-                <a href="lich-su-don-hang.php" class="text-dark text-decoration-none me-3">Lịch sử đơn</a>
-                <a href="dang-xuat.php" class="text-danger text-decoration-none"><i class="fa-solid fa-right-from-bracket"></i> Thoát</a>
+                <!-- Khu vực tài khoản khi đã đăng nhập có Dropdown tiện ích -->
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-sm dropdown-toggle text-dark fw-bold py-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user me-1 text-primary"></i> Xin chào, <strong><?= htmlspecialchars($user_data['fullname']) ?></strong>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-1" style="font-size: 13px;">
+                        <li>
+                            <a class="dropdown-item py-2" href="tai-khoan.php">
+                                <i class="fa-solid fa-user-gear me-2 text-dark"></i> Quản lý tài khoản
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2" href="lich-su-don-hang.php">
+                                <i class="fa-solid fa-clock-rotate-left me-2 text-warning"></i> Lịch sử đơn hàng
+                            </a>
+                        </li>
+                        <?php if(isset($user_data['role']) && $user_data['role'] !== 'customer'): ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item py-2 text-danger fw-bold" href="../admin/index-admin.php">
+                                    <i class="fa-solid fa-gauge-high me-2"></i> Trang Quản Trị
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item py-2 text-danger" href="dang-xuat.php">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             <?php else: ?>
                 <a href="dang-nhap.php" class="text-dark text-decoration-none me-3"><i class="fa-solid fa-user"></i> Đăng nhập</a>
                 <a href="dang-ky.php" class="text-dark text-decoration-none"><i class="fa-solid fa-user-plus"></i> Đăng ký</a>
@@ -56,10 +80,10 @@ $user_data = $is_logged_in ? $_SESSION['user'] : null;
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-3 col-6">
-    <a href="index.php" class="text-decoration-none">
-        <img src="../assets/images/logo.png" alt="NMK Shoes Logo" style="max-height: 50px; width: auto;">
-    </a>
-</div>
+                <a href="index.php" class="text-decoration-none">
+                    <img src="../assets/images/logo.png" alt="NMK SHOP Logo" style="max-height: 50px; width: auto;">
+                </a>
+            </div>
             <div class="col-md-6 col-12 my-md-0 my-3">
                 <form action="cua-hang.php" method="GET" class="search-box d-flex">
                     <input type="text" name="search" class="form-control" placeholder="Tìm kiếm đôi giày yêu thích của bạn..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
